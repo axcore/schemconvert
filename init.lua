@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 -- schemconvert mod by A S Lewis
--- v1.0 22 Jun 2021
+-- v1.1 22 Jun 2021
 -- Lieence: LGPL 2.1
 ---------------------------------------------------------------------------------------------------
 
@@ -305,12 +305,12 @@ for _, local_path in ipairs(file_list) do
 
             if convert_table[mini_table.name] ~= nil then
 
+                -- (Keep track of which convertable nodes have been found at least once)
+                check_table[mini_table.name] = nil
+
                 -- Convert this node
                 mini_table.name = convert_table[mini_table.name]
                 schem_table.data[i] = mini_table
-
-                -- (Keep track of which convertable nodes have been found at least once)
-                check_table[mini_table.name] = nil
 
                 -- (Show converted nodes at the end, if required)
                 if converted_table[mini_table.name] == nil then
