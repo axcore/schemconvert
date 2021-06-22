@@ -1,0 +1,3 @@
+#original_node|replacement_node
+#default:stone|mymod:rock
+#default:cobble|mymod:rubble
