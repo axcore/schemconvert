@@ -25,7 +25,7 @@ don't need the crutch of reading from a **settingtypes.txt** file).
 
 The default behaviour is to convert original .mts file, but not to write additional .lua files.
 
-Next, there is a folder called **input**. Copy the .mts files into this folder. Ffiles in this
+Next, there is a folder called **input**. Copy the .mts files into this folder. Files in this
 folder are never modified.
 
 Unfortunately, there is no easy way for Lua to get a list of files from a folder; therefore we have
@@ -33,7 +33,7 @@ to write the list ourselves in **files.txt**. This should contain one file per l
 and lines starting with the # character are ignored.
 
 There is a shortcut: if a file called **test.mts** exists, it will be loaded, regardless of whether
-it is mentioend in **files.txt**.
+it is mentioned in **files.txt**.
 
 Next, the **convert.csv** file provides a list of nodes to convert. Once again, empty lines and
 lines starting with the # character are ignored.
@@ -47,10 +47,10 @@ For example
         default:stone|mymod:rock
         default:cobble|othermod:rubble
 
-It is not necessary for either mod to be loaded; **mtsconvert** deals with simple strings, it does
+It is not necessary for either mod to be loaded; **schemconvert** deals with simple strings, it does
 not check whether the nodes **default:stone** or **mymod:rock** actually exist in the game.
 
-Now, start the game (with **mtsconvert** enabled). The converted .mts files are written to the
+Now, start the game (with **schemconvert** enabled). The converted .mts files are written to the
 **output** folder.
 
 Nervous users can check the results of their work by changing the flags (as described above) to
