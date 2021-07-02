@@ -8,7 +8,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 schemconvert = {}
 schemconvert.name = "schemconvert"
 schemconvert.ver_max = 1
-schemconvert.ver_min = 2
+schemconvert.ver_min = 3
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
