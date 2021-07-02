@@ -1,20 +1,27 @@
 ---------------------------------------------------------------------------------------------------
 -- schemconvert mod by A S Lewis
--- v1.1 22 Jun 2021
 -- Lieence: LGPL 2.1
 ---------------------------------------------------------------------------------------------------
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
+schemconvert = {}
+schemconvert.name = "schemconvert"
+schemconvert.ver_max = 1
+schemconvert.ver_min = 2
+schemconvert.ver_rev = 0
+
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
 
 local file_list = {}
+schemconvert.schem_table = {}
 local convert_table = {}
 local check_table = {}
 local converted_table = {}
 local not_converted_table = {}
 
-local convert_count = 0
+local mts_count = 0
+local schem_count = 0
 local error_count = 0
 
 -- If enabled, show info/error messages in the chat window and debug file
@@ -44,15 +51,19 @@ local show_summary_flag = true
 ---------------------------------------------------------------------------------------------------
 
 local function show_info(msg)
+
     if show_msg_flag then
         minetest.log("[SCHEMCONVERT] " .. msg)
     end
+
 end
 
 local function show_error(msg)
+
     if show_msg_flag then
         minetest.log("[SCHEMCONVERT] [ERROR] " .. msg)
     end
+
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -190,6 +201,54 @@ local function print_table(table_to_show, optional_title)
 
 end
 
+-- Add a Lua schematic
+function schemconvert.add_schem(name, schem_table)
+
+    -- Called from schematics.lua
+    -- The code there could easily add a key/value pair to schemconvert.schem_table, but usually
+    --      it's preferable to use a function call
+    -- (Specifically, the official minetest-game schematic list uses mts_save(), so that code could
+    --      be copy-pasted into our schematics.lua, with just the function name changed)
+
+    schemconvert.schem_table[name] = schem_table
+
+end
+
+-- Convert old nodes in a schematic table to new nodes
+local function convert_nodes(schem_table)
+
+    for i, mini_table in ipairs(schem_table.data) do
+
+        if convert_table[mini_table.name] ~= nil then
+
+            -- (Keep track of which convertable nodes have been found at least once)
+            check_table[mini_table.name] = nil
+
+            -- Convert this node
+            mini_table.name = convert_table[mini_table.name]
+            schem_table.data[i] = mini_table
+
+            -- (Show converted nodes at the end, if required)
+            if converted_table[mini_table.name] == nil then
+                converted_table[mini_table.name] = 1
+            else
+                converted_table[mini_table.name] = converted_table[mini_table.name] + 1
+            end
+
+            else
+
+            if not_converted_table[mini_table.name] == nil then
+                not_converted_table[mini_table.name] = 1
+            else
+                not_converted_table[mini_table.name] = not_converted_table[mini_table.name] + 1
+            end
+
+        end
+
+    end
+
+end
+
 -- Save a schematic as .mts
 local function save_mts(schem_table, output_path)
 
@@ -232,7 +291,7 @@ local function save_lua(schem_table, output_path)
 end
 
 ---------------------------------------------------------------------------------------------------
--- Do the conversion
+-- Read schematics
 ---------------------------------------------------------------------------------------------------
 
 -- Read the file list, ignoring anything that isn't an .mts file
@@ -244,8 +303,10 @@ if file_exists(mod_path .. "/input/test.mts") then
     for _, value in ipairs(file_list) do
 
         if value == "test.mts" then
+
             match_flag = true
             break
+
         end
 
     end
@@ -257,6 +318,20 @@ if file_exists(mod_path .. "/input/test.mts") then
 end
 
 show_info(S("Number of .mts files specified: @1", #file_list))
+
+-- Read Lua schematics into a table
+dofile(mod_path .. "/schematics.lua")
+
+local count = 0
+for k, v in pairs(schemconvert.schem_table) do
+    count = count + 1
+end
+
+show_info(S("Number of Lua schematics specified: @1", count))
+
+---------------------------------------------------------------------------------------------------
+-- Read conversion table
+---------------------------------------------------------------------------------------------------
 
 -- Read the conversion table. Every line in the CSV file should be in the form
 --      original_node|replacement_node
@@ -275,7 +350,11 @@ end
 
 show_info(S("Number of convertable nodes specified: @1", tostring(count)))
 
--- Convert each schematic, one at a time
+---------------------------------------------------------------------------------------------------
+-- Convert schematics
+---------------------------------------------------------------------------------------------------
+
+-- Convert each MTS schematic, one at a time
 for _, local_path in ipairs(file_list) do
 
     local input_path = mod_path .. "/input/" .. local_path
@@ -301,35 +380,7 @@ for _, local_path in ipairs(file_list) do
         end
 
         -- Convert old nodes to new
-        for i, mini_table in ipairs(schem_table.data) do
-
-            if convert_table[mini_table.name] ~= nil then
-
-                -- (Keep track of which convertable nodes have been found at least once)
-                check_table[mini_table.name] = nil
-
-                -- Convert this node
-                mini_table.name = convert_table[mini_table.name]
-                schem_table.data[i] = mini_table
-
-                -- (Show converted nodes at the end, if required)
-                if converted_table[mini_table.name] == nil then
-                    converted_table[mini_table.name] = 1
-                else
-                    converted_table[mini_table.name] = converted_table[mini_table.name] + 1
-                end
-
-            else
-
-                if not_converted_table[mini_table.name] == nil then
-                    not_converted_table[mini_table.name] = 1
-                else
-                    not_converted_table[mini_table.name] = not_converted_table[mini_table.name] + 1
-                end
-
-            end
-
-        end
+        convert_nodes(schem_table)
 
         -- Save the converted .mts file
         if do_convert_flag then
@@ -337,7 +388,7 @@ for _, local_path in ipairs(file_list) do
             if not save_mts(schem_table, output_path) then
                 error_count = error_count + 1
             else
-                convert_count = convert_count + 1
+                mts_count = mts_count + 1
             end
 
         end
@@ -354,8 +405,51 @@ for _, local_path in ipairs(file_list) do
 
 end
 
--- Show the results
-show_info(S("Number of .mts files converted: @1", convert_count))
+-- Convert each Lua schematic, one at a time
+for name, schem_table in pairs(schemconvert.schem_table) do
+
+    local output_path = mod_path .. "/output/" .. name .. ".mts"
+    local input_lua_path = mod_path .. "/output/" .. name .. ".input.lua"
+    local output_lua_path = mod_path .. "/output/" .. name .. ".output.lua"
+
+    -- Write/display the original .lua schematic, if required
+    if write_converted_lua_flag then
+        save_lua(schem_table, input_lua_path)
+    end
+    if show_original_lua_flag then
+        print_table(schem_table, S("Contents of schematic @1", name))
+    end
+
+    -- Convert old nodes to new
+    convert_nodes(schem_table)
+
+    -- Save the converted .mts file
+    if do_convert_flag then
+
+        if not save_mts(schem_table, output_path) then
+            error_count = error_count + 1
+        else
+            schem_count = schem_count + 1
+        end
+
+    end
+
+    -- Write/display the converted .mts file as lua, if required
+    if write_converted_lua_flag then
+        save_lua(schem_table, output_lua_path)
+    end
+    if show_converted_lua_flag then
+        print_table(schem_table, S("Contents of schematic @1", name))
+    end
+
+end
+
+---------------------------------------------------------------------------------------------------
+-- Show results
+---------------------------------------------------------------------------------------------------
+
+show_info(S("Number of .mts files converted: @1", mts_count))
+show_info(S("Number of Lua schematics converted: @1", schem_count))
 show_info(S("Number of conversion errors: @1", error_count))
 
 if show_summary_flag then
