@@ -71,7 +71,7 @@ Start the game (with **schemconvert** enabled). Converted files are written to t
 folder.
 
 You can check the results of your work by changing the flags (as described above) to
-write the orginal and/or converted files as .lua files, so the changes can be inspected visually.
+write the original and/or converted files as .lua files, so the changes can be inspected visually.
 
 # Comparable mods
 
