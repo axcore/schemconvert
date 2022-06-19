@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 -- schemconvert mod by A S Lewis
--- Lieence: LGPL 2.1
+-- Licence: LGPL 2.1
 ---------------------------------------------------------------------------------------------------
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -8,7 +8,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 schemconvert = {}
 schemconvert.name = "schemconvert"
 schemconvert.ver_max = 1
-schemconvert.ver_min = 3
+schemconvert.ver_min = 4
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
@@ -136,7 +136,7 @@ local function read_csv(local_path)
 end
 
 -- Format a table for display in minetest's debug.txt file
-local function tprint(this_table, indent)
+local function tprint(t, indent)
 
     -- Adapted from https://stackoverflow.com/questions/41942289/display-contents-of-tables-in-lua
 
@@ -144,7 +144,7 @@ local function tprint(this_table, indent)
 
     local toprint = "{\r\n"
     indent = indent + 4
-    for k, v in pairs(this_table) do
+    for k, v in pairs(t) do
 
         toprint = toprint .. string.rep(" ", indent)
         if (type(k) == "number") then
@@ -170,17 +170,17 @@ local function tprint(this_table, indent)
 
 end
 
-local function print_table(table_to_show, optional_title)
+local function print_table(t, optional_title)
 
     -- Adapted from https://stackoverflow.com/questions/41942289/display-contents-of-tables-in-lua
 
     -- Basic checks
-    if table_to_show == nil then
+    if t == nil then
 
         show_error(S("Cannot print an unspecified table"))
         return
 
-    elseif type(table_to_show) == "string" then
+    elseif type(t) == "string" then
 
         show_error(S("Cannot print a string as a table"))
         return
@@ -193,11 +193,26 @@ local function print_table(table_to_show, optional_title)
             output = output .. optional_title .. "\r\n"
         end
 
-        output = output .. tprint(table_to_show)
+        output = output .. tprint(t)
 
         minetest.log(output)
 
     end
+
+end
+
+-- Return a list of keys in a table, sorted alphabetically
+
+local function sort_table(t)
+
+    local list = {}
+    for key in pairs(t) do
+        table.insert(list, key)
+    end
+
+    table.sort(list)
+
+    return list
 
 end
 
@@ -462,9 +477,8 @@ if show_summary_flag then
 
         show_info(S("Converted nodes:"))
 
-        table.sort(converted_table)
-        for k, v in pairs(converted_table) do
-            show_info("   " .. k .. ": " .. v)
+        for _, k in pairs(sort_table(converted_table)) do
+            show_info("   " .. k .. ": " .. converted_table[k])
         end
 
     end
@@ -477,9 +491,8 @@ if show_summary_flag then
 
         show_info(S("Non-converted nodes:"))
 
-        table.sort(not_converted_table)
-        for k, v in pairs(not_converted_table) do
-            show_info("   " .. k .. ": " .. v)
+        for _, k in pairs(sort_table(not_converted_table)) do
+            show_info("   " .. k .. ": " .. not_converted_table[k])
         end
 
     end
@@ -492,9 +505,8 @@ if show_summary_flag then
 
         show_info(S("Convertable nodes not found:"))
 
-        table.sort(check_table)
-        for k, v in pairs(check_table) do
-            show_info("   " .. k)
+        for _, k in pairs(sort_table(check_table)) do
+            show_info("   " .. check_table[k])
         end
 
     end
