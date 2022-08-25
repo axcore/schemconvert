@@ -8,7 +8,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 schemconvert = {}
 schemconvert.name = "schemconvert"
 schemconvert.ver_max = 1
-schemconvert.ver_min = 4
+schemconvert.ver_min = 5
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
@@ -387,7 +387,7 @@ for _, local_path in ipairs(file_list) do
         -- Read the original .mts file
         local schem_table = minetest.read_schematic(input_path, {})
         -- Write/display the original .mts file as lua, if required
-        if write_converted_lua_flag then
+        if write_original_lua_flag then
             save_lua(schem_table, input_lua_path)
         end
         if show_original_lua_flag then
