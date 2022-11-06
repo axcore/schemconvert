@@ -21,7 +21,7 @@ Thus, this mod is useful for the following purposes:
 * A general-purpose Lua > .mts > Lua schematic converter
 
 This mod has no gameplay value, and is only useful for developers. It has been tested on Minetest
-5.4.1. It has not been tested on MS Windows.
+5.4.1 - 5.6.1. It has not been tested on MS Windows.
 
 # Importing schematics
 

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 -- schemconvert mod by A S Lewis
--- Licence: LGPL 2.1
+-- License: LGPL 2.1
 ---------------------------------------------------------------------------------------------------
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -8,7 +8,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 schemconvert = {}
 schemconvert.name = "schemconvert"
 schemconvert.ver_max = 1
-schemconvert.ver_min = 5
+schemconvert.ver_min = 6
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
