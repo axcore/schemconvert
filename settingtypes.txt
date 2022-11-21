@@ -1,0 +1,16 @@
+# Convert an original schematic into a modified schematic, swapping specified nodes
+schemconvert_do_convert_flag (Convert specified nodes in schematics) bool true
+
+# Write the original schematic as a Lua file
+schemconvert_write_original_lua_flag (Write original schematic as Lua) bool false
+# Write the converted schematic as a Lua file
+schemconvert_write_converted_lua_flag (Write converted schematic as Lua) bool false
+
+# Show original schematic as Lua in the chat window
+schemconvert_show_original_lua_flag (Show original schematic in chat window) bool false
+# Show converted schematic as Lua in the chat window
+schemconvert_show_converted_lua_flag (Show converted schematic in chat window) bool false
+# Show a complete list of converted/unconverted nodes in the chat window
+schemconvert_show_summary_flag (Show converted/unconverted node list in chat window) bool false
+# Show debug messages in the debug file and the chat window
+schemconvert_show_debug_flag (Show debug messages) bool true
