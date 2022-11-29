@@ -8,7 +8,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 schemconvert = {}
 schemconvert.name = "schemconvert"
 schemconvert.ver_max = 1
-schemconvert.ver_min = 8
+schemconvert.ver_min = 9
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
@@ -87,7 +87,7 @@ local function file_exists(path)
     -- Adapted from https://stackoverflow.com/questions/11201262/how-to-read-data-from-a-file-in-lua
     -- Check the specified file exists
 
-    local f = io.open(path, "rb")
+    local f = io.open(path, "r")
     if f then
         f:close()
     end
@@ -256,7 +256,7 @@ local function save_mts(schem_table, output_path)
     -- Save a schematic as .mts
 
     local mts_data = minetest.serialize_schematic(schem_table, "mts", {})
-    local mts_output = io.open(output_path, "w")
+    local mts_output = io.open(output_path, "wb")
     if not mts_data or not mts_output then
 
         show_error(S("Unable to save .mts file @1", output_path))
