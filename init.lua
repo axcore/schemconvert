@@ -7,8 +7,8 @@ local S = minetest.get_translator(minetest.get_current_modname())
 
 schemconvert = {}
 schemconvert.name = "schemconvert"
-schemconvert.ver_max = 1
-schemconvert.ver_min = 9
+schemconvert.ver_max = 2
+schemconvert.ver_min = 0
 schemconvert.ver_rev = 0
 
 local mod_path = minetest.get_modpath(minetest.get_current_modname())
@@ -511,7 +511,7 @@ function schemconvert.add_schem(name, schem_table)
     --      schemconvert.schem_table
     -- The code there could easily add a key/value pair to the table, but usually it's simpler just
     --      to call this function
-    -- (Specifically, the list of schematics in minetest-game, schematic_tables.txt, uses calls to
+    -- (Specifically, the list of schematics in minetest_game, schematic_tables.txt, uses calls to
     --      that modpack's mts_save(), so it is convenient to copy paste schematics from that file
     --      into our schematics.lua, with all mts_save() calls replaced with
     --      schemconvert.add_schem() calls)

@@ -55,7 +55,7 @@ Secondly, schematics expressed as Lua tables can be copy-pasted into the **schem
 The code in that file should add one or more schematics to **schemconvert.schem_table**. The
 simplest way to do this is via a call to **schemconvert.add_schem()**.
 
-Some examples of schematics expressed as Lua tables can be found in **minetest-game**, in the file
+Some examples of schematics expressed as Lua tables can be found in **minetest_game**, in the file
 **schematic-tables.txt**. If you like, you could copy-paste the whole of that file into
 schemconvert's **schematics.lua**. Don't forget to change the function calls from **mts_save()** to
 **schemconvert.add_schem()**.

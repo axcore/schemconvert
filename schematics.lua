@@ -6,7 +6,7 @@
 -- You can add LUA schematics to this file
 -- They will be processed together with the .mts files loaded from ../input
 --
--- For some examples of LUA schematics, see the schematic_tables.txt file in minetest-game
+-- For some examples of LUA schematics, see the schematic_tables.txt file in minetest_game
 --
 -- Each LUA schematic should be added with a function call in the usual format:
 --
